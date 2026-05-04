@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.lms.lms.Entity.Enrollment;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "courses")
 @EntityListeners(AuditingEntityListener.class)
+@EnableJpaAuditing
 @Setter
 @Getter
 public class Course {

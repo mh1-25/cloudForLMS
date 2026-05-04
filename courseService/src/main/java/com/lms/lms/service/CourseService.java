@@ -215,13 +215,19 @@ public class CourseService implements ICourseService {
     if (auth == null || !auth.isAuthenticated()) {
         throw new RuntimeException("User not authenticated");
     }
+
+    
     boolean isInstructor = auth.getAuthorities().stream()
             .anyMatch(a -> a.getAuthority().equals("ROLE_INSTRUCTOR"));
+
     if (!isInstructor) {
         throw new RuntimeException("Access denied: Not an instructor");
     }
+
     String email = auth.getName();
-    return userServiceClient.getUserByEmail(email);
+
+    return userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Instructor not found"));
 }
 
     // Browse all available courses
