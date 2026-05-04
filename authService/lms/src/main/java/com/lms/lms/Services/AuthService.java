@@ -1,17 +1,19 @@
 package com.lms.lms.Services;
 
-import com.lms.lms.DTOS.LoginRequest;
-import com.lms.lms.DTOS.SignupRequest;
-import com.lms.lms.DTOS.authReponse;
-import com.lms.lms.Entity.User;
-import com.lms.lms.Repo.UserRepository;
-import com.lms.lms.security.JwtUtils;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.lms.common.security.JwtUtils;
+import com.lms.lms.DTOS.LoginRequest;
+import com.lms.lms.DTOS.SignupRequest;
+import com.lms.lms.DTOS.authReponse;
+import com.lms.lms.Entity.User;
+import com.lms.lms.Repo.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

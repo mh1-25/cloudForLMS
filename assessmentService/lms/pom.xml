@@ -52,7 +52,11 @@
 			<version>3.5.3</version>
 		</dependency>
 
-
+<dependency>
+    <groupId>com.lms</groupId>
+    <artifactId>lmsCommonLib</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
 		<dependency>
 			<groupId>io.quarkiverse.jjwtjackson</groupId>
 			<artifactId>quarkus-jjwt-jackson</artifactId>
