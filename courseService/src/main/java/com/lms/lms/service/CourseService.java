@@ -1,4 +1,4 @@
-package service;
+package com.lms.lms.service;
 
 import com.lms.lms.DTO.CourseDTO;
 import com.lms.lms.DTO.CourseRequestDto;
@@ -42,7 +42,6 @@ public class CourseService implements ICourseService {
     private final CourseProgressRepository courseProgressRepository;
     private final CategoryRepository categoryRepository;
     private final EnrollmentRepository enrollmentRepository;
-    private final UserServiceClient userServiceClient;
 
     @Override
     public CourseResponseDto createCourse(CourseRequestDto dto) {

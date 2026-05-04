@@ -1,8 +1,8 @@
 package com.lms.lms.Controller;
 
-import com.lms.lms.DTOS.LessonRequestDto;
-import com.lms.lms.DTOS.LessonResponseDto;
-import com.lms.lms.Services.LessonServiceImpl;
+import com.lms.lms.DTO.LessonRequestDto;
+import com.lms.lms.DTO.LessonResponseDto;
+import com.lms.lms.service.LessonServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
