@@ -1,10 +1,8 @@
 package com.lms.lms.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.*;
 
 import com.lms.lms.Entity.User;
 import com.lms.lms.Repo.UserRepository;

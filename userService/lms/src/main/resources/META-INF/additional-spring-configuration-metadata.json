@@ -1,5 +1,32 @@
-{"properties": [{
-  "name": "jwt.secret",
-  "type": "java.lang.String",
-  "description": "A description for 'jwt.secret'"
-}]}
+{"properties": [
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.secret'"
+  },
+  {
+    "name": "services.auth-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'services.auth-service.url'"
+  },
+  {
+    "name": "services.assessment-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'services.assessment-service.url'"
+  },
+  {
+    "name": "services.enrollment-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'services.enrollment-service.url'"
+  },
+  {
+    "name": "services.certificate-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'services.certificate-service.url'"
+  },
+  {
+    "name": "services.course-service.url",
+    "type": "java.lang.String",
+    "description": "A description for 'services.course-service.url'"
+  }
+]}

@@ -1,33 +1,36 @@
 package com.lms.lms.service;
 
-import com.lms.lms.DTO.CourseDTO;
-import com.lms.lms.DTO.CourseRequestDto;
-import com.lms.lms.DTO.CourseResponseDto;
-import com.lms.lms.DTO.CourseDetailsResponse;
-import com.lms.lms.DTO.LessonResponseDto;
-import com.lms.lms.DTO.ExamScoreResponse;
-import com.lms.lms.DTO.QuizScoreResponse;
-import com.lms.lms.DTO.StudentProgressResponse;
-import com.lms.lms.repo.CourseProgressRepository;
-import com.lms.lms.repo.EnrollmentRepository;
-import com.lms.lms.repo.ExamAttemptRepository;
-import com.lms.lms.entity.Category;
-import com.lms.lms.entity.Course;
-import com.lms.lms.repo.QuizAttemptRepository;
-import com.lms.lms.entity.User;
-import com.lms.lms.repo.CategoryRepository;
-import com.lms.lms.repo.CourseRepository;
-import com.lms.lms.repo.LessonRepository;
-import com.lms.lms.repo.UserRepository;
-import com.lms.lms.ServiceAbstraction.ICourseService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import com.lms.lms.DTO.CourseDTO;
+import com.lms.lms.DTO.CourseDetailsResponse;
+import com.lms.lms.DTO.CourseRequestDto;
+import com.lms.lms.DTO.CourseResponseDto;
+import com.lms.lms.DTO.ExamScoreResponse;
+import com.lms.lms.DTO.LessonResponseDto;
+import com.lms.lms.DTO.QuizScoreResponse;
+import com.lms.lms.DTO.StudentProgressResponse;
+import com.lms.lms.ServiceAbstraction.ICourseService;
+import com.lms.lms.entity.Category;
+import com.lms.lms.entity.Course;
+import com.lms.lms.entity.User;
+import com.lms.lms.repo.CategoryRepository;
+import com.lms.lms.repo.CourseProgressRepository;
+import com.lms.lms.repo.CourseRepository;
+import com.lms.lms.repo.EnrollmentRepository;
+import com.lms.lms.repo.ExamAttemptRepository;
+import com.lms.lms.repo.LessonRepository;
+import com.lms.lms.repo.QuizAttemptRepository;
+import com.lms.lms.repo.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -162,13 +165,28 @@ public class CourseService implements ICourseService {
             response.setTitle(c.getTitle());
             response.setDescription(c.getDescription());
             response.setThumbnailUrl(c.getThumbnailUrl());
-            // response.setIsFree(c.getFree());
-            // response.setIsPublished(c.getIsPublished());
+            response.setFree(c.isFree());
+            response.setPublished(c.isPublished());
             response.setTotalLessons(c.getTotalLessons());
             response.setTotalDuration(c.getTotalDuration());
             response.setInstructorId(c.getInstructor().getId());
+            response.setInstructorName(c.getInstructor().getFirstName() + " " + c.getInstructor().getLastName());
             response.setCategoryId(c.getCategory().getId());
-            response.setCreatedAt(c.getCreatedAt());
+            response.setCreatedAt(c.getCreatedAt()); 
+            response.setLessons(c.getLessons().stream().map(lesson -> {
+                LessonResponseDto lessonDto = new LessonResponseDto();
+                lessonDto.setId(lesson.getId());
+                lessonDto.setTitle(lesson.getTitle());
+                lessonDto.setDescription(lesson.getDescription());
+                lessonDto.setVideoUrl(lesson.getVideoUrl());
+                lessonDto.setThumbnailUrl(lesson.getThumbnailUrl());
+                lessonDto.setDuration(lesson.getDuration());
+                lessonDto.setLessonOrder(lesson.getLessonOrder());
+                lessonDto.setPreview(lesson.isPreview());
+                lessonDto.setCourseId(c.getId());
+                lessonDto.setCreatedAt(lesson.getCreatedAt());
+                return lessonDto;
+        }).collect(Collectors.toList()));
             // response.setUpdatedAt(c.getUpdatedAt());
             return response;
         }).collect(Collectors.toList());

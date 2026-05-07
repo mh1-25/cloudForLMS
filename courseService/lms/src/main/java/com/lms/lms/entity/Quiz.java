@@ -1,10 +1,18 @@
 package com.lms.lms.entity;
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.math.BigDecimal;
-
 import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Data
@@ -32,7 +40,7 @@ public class Quiz {
     @Column(name = "is_published")
     private boolean published = false;
     
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<Question> questions;
 };
 
