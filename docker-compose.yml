@@ -1,8 +1,5 @@
 services:
 
-  # ─────────────────────────────────────────────
-  # DATABASE
-  # ─────────────────────────────────────────────
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -13,15 +10,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
-  # ─────────────────────────────────────────────
-  # MICROSERVICES
-  # ─────────────────────────────────────────────
   auth-service:
     build:
       context: .
@@ -30,8 +19,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     labels:
       logging: "promtail"
       service_name: "auth-service"
@@ -44,8 +32,7 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     labels:
       logging: "promtail"
       service_name: "user-service"
@@ -58,8 +45,7 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     labels:
       logging: "promtail"
       service_name: "course-service"
@@ -72,8 +58,7 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     labels:
       logging: "promtail"
       service_name: "assessment-service"
@@ -86,8 +71,7 @@ services:
     ports:
       - "8084:8084"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     labels:
       logging: "promtail"
       service_name: "enrollment-service"
@@ -100,8 +84,7 @@ services:
     ports:
       - "8085:8085"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     labels:
       logging: "promtail"
       service_name: "certificate-service"
@@ -112,7 +95,7 @@ services:
       dockerfile: apiGateWay/lms/Dockerfile
     container_name: api-gateway
     ports:
-      - "9000:9000"   # exposed on 9000 to avoid clash with auth-service on 8080
+      - "9000:9000"
     depends_on:
       - auth-service
       - user-service
@@ -124,9 +107,6 @@ services:
       logging: "promtail"
       service_name: "api-gateway"
 
-  # ─────────────────────────────────────────────
-  # OBSERVABILITY STACK
-  # ─────────────────────────────────────────────
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -135,11 +115,11 @@ services:
       - "3200:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
-  
+
   loki:
     image: grafana/loki
     container_name: loki
-    user: "0"  
+    user: "0"
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml
     command: -config.file=/etc/loki/loki-config.yaml
@@ -173,6 +153,7 @@ services:
     command: run /etc/alloy/config.alloy --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data
     depends_on:
       - loki
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -193,7 +174,8 @@ services:
       - assessment-service
       - enrollment-service
       - certificate-service
-    restart: unless-stopped 
+    restart: unless-stopped
+
   converter:
     image: grafana/alloy:latest
     container_name: alloy-converter
@@ -207,9 +189,6 @@ services:
     profiles:
       - convert
 
-# ─────────────────────────────────────────────
-# VOLUMES
-# ─────────────────────────────────────────────
 volumes:
   mysql-data:
   grafana-storage:
