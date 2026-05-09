@@ -112,7 +112,7 @@ services:
       dockerfile: apiGateWay/lms/Dockerfile
     container_name: api-gateway
     ports:
-      - "9000:8080"   # exposed on 9000 to avoid clash with auth-service on 8080
+      - "9000:9000"   # exposed on 9000 to avoid clash with auth-service on 8080
     depends_on:
       - auth-service
       - user-service
@@ -173,15 +173,27 @@ services:
     command: run /etc/alloy/config.alloy --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data
     depends_on:
       - loki
-  promethues:
-      image: prom/prometheus
-      container_name: prometheus
-      ports:
-        - "9090:9090"
-      volumes:
-        - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml
-      command: --config.file=/etc/prometheus/prometheus.yml
-      restart: unless-stopped  
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    depends_on:
+      - auth-service
+      - user-service
+      - course-service
+      - assessment-service
+      - enrollment-service
+      - certificate-service
+    restart: unless-stopped 
   converter:
     image: grafana/alloy:latest
     container_name: alloy-converter
