@@ -1,18 +1,19 @@
 package com.lms.lms.Services;
 
-import com.lms.lms.DTOS.CreateUserRequest;
-import com.lms.lms.DTOS.UserRespones;
-import com.lms.lms.Entity.User;
-import com.lms.lms.Repo.UserRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.lms.lms.DTOS.CreateUserRequest;
+import com.lms.lms.DTOS.UserRespones;
+import com.lms.lms.Entity.User;
+import com.lms.lms.Repo.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Using single constructor for dependency injection, no need for @Autowired for ("Singleton Design patterns") 
 public class AdminUserService {
 
     private final UserRepository userRepository;

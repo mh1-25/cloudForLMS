@@ -1,0 +1,204 @@
+services:
+
+  # ─────────────────────────────────────────────
+  # DATABASE
+  # ─────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lms
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ─────────────────────────────────────────────
+  # MICROSERVICES
+  # ─────────────────────────────────────────────
+  auth-service:
+    build:
+      context: .
+      dockerfile: authService/lms/Dockerfile
+    container_name: auth-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    labels:
+      logging: "promtail"
+      service_name: "auth-service"
+
+  user-service:
+    build:
+      context: .
+      dockerfile: userService/lms/Dockerfile
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    labels:
+      logging: "promtail"
+      service_name: "user-service"
+
+  course-service:
+    build:
+      context: .
+      dockerfile: courseService/lms/Dockerfile
+    container_name: course-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    labels:
+      logging: "promtail"
+      service_name: "course-service"
+
+  assessment-service:
+    build:
+      context: .
+      dockerfile: assessmentService/lms/Dockerfile
+    container_name: assessment-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    labels:
+      logging: "promtail"
+      service_name: "assessment-service"
+
+  enrollment-service:
+    build:
+      context: .
+      dockerfile: enrollmentService/lms/Dockerfile
+    container_name: enrollment-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    labels:
+      logging: "promtail"
+      service_name: "enrollment-service"
+
+  certificate-service:
+    build:
+      context: .
+      dockerfile: certificateService/lms/Dockerfile
+    container_name: certificate-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    labels:
+      logging: "promtail"
+      service_name: "certificate-service"
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apiGateWay/lms/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "9000:8080"   # exposed on 9000 to avoid clash with auth-service on 8080
+    depends_on:
+      - auth-service
+      - user-service
+      - course-service
+      - assessment-service
+      - enrollment-service
+      - certificate-service
+    labels:
+      logging: "promtail"
+      service_name: "api-gateway"
+
+  # ─────────────────────────────────────────────
+  # OBSERVABILITY STACK
+  # ─────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3200:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+  
+  loki:
+    image: grafana/loki
+    container_name: loki
+    user: "0"  
+    volumes:
+      - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml
+    command: -config.file=/etc/loki/loki-config.yaml
+    ports:
+      - "3100:3100"
+    restart: always
+
+  promtail:
+    image: grafana/promtail
+    container_name: promtail
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/log:/var/log:ro
+      - ./loki/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    restart: always
+    profiles:
+      - promtail-eol
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    ports:
+      - "12345:12345"
+    volumes:
+      - ./config.alloy:/etc/alloy/config.alloy
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: run /etc/alloy/config.alloy --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data
+    depends_on:
+      - loki
+  promethues:
+      image: prom/prometheus
+      container_name: prometheus
+      ports:
+        - "9090:9090"
+      volumes:
+        - ./loki/prometheus.yml:/etc/prometheus/prometheus.yml
+      command: --config.file=/etc/prometheus/prometheus.yml
+      restart: unless-stopped  
+  converter:
+    image: grafana/alloy:latest
+    container_name: alloy-converter
+    ports:
+      - "12346:12346"
+    volumes:
+      - ./loki/promtail-config.yaml:/etc/promtail/promtail-config.yaml
+      - ./config.alloy:/config.alloy
+    entrypoint: /bin/sh
+    command: -c "/bin/alloy convert --source-format=promtail --output=/config.alloy /etc/promtail/promtail-config.yaml"
+    profiles:
+      - convert
+
+# ─────────────────────────────────────────────
+# VOLUMES
+# ─────────────────────────────────────────────
+volumes:
+  mysql-data:
+  grafana-storage:
+  loki-data:

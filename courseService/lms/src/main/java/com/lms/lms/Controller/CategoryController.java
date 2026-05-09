@@ -31,14 +31,14 @@ public class CategoryController {
 
     
    @GetMapping("/all")
-   @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR') ")
+   @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR') ") // Only Admins and Instructors can access this endpoint OCL 
 public ResponseEntity<List<CategoryResponse>> getAllCategories() {
     return ResponseEntity.ok(categoryService.getAllCategories());
 }
 
    
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // Only Admins can access this endpoint OCL
     public ResponseEntity<CategoryResponse> createCategory(
             @Valid @RequestBody CategoryRequest request) {
 
@@ -49,7 +49,7 @@ public ResponseEntity<List<CategoryResponse>> getAllCategories() {
                 .body(category);
     }
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // Only Admins can access this endpoint OCL
     public ResponseEntity<CategoryResponse> updateCategory(
             @PathVariable Long id,
             @Valid @RequestBody CategoryRequest request) {
@@ -59,7 +59,7 @@ public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         return ResponseEntity.ok(updatedCategory);
     }
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')") // Only Admins can access this endpoint OCL
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
@@ -67,7 +67,7 @@ public ResponseEntity<List<CategoryResponse>> getAllCategories() {
 
    
     @GetMapping("/search")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')") // Only Admins can access this endpoint OCL
     public ResponseEntity<List<CategoryResponse>> searchCategories(
             @RequestParam String keyword) {
 
