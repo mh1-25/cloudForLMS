@@ -12,6 +12,7 @@ services:
       - mysql-data:/var/lib/mysql
 
   auth-service:
+    image: mohamedelssawy/auth-service:1.0
     build:
       context: .
       dockerfile: authService/lms/Dockerfile
@@ -30,6 +31,7 @@ services:
       service_name: "auth-service"
 
   user-service:
+    image: mohamedelssawy/user-service:1.0
     build:
       context: .
       dockerfile: userService/lms/Dockerfile
@@ -43,6 +45,7 @@ services:
       service_name: "user-service"
 
   course-service:
+    image: mohamedelssawy/course-service:1.0
     build:
       context: .
       dockerfile: courseService/lms/Dockerfile
@@ -56,6 +59,7 @@ services:
       service_name: "course-service"
 
   assessment-service:
+    image: mohamedelssawy/assessment-service:1.0
     build:
       context: .
       dockerfile: assessmentService/lms/Dockerfile
@@ -69,6 +73,7 @@ services:
       service_name: "assessment-service"
 
   enrollment-service:
+    image: mohamedelssawy/enrollment-service:1.0
     build:
       context: .
       dockerfile: enrollmentService/lms/Dockerfile
@@ -82,6 +87,7 @@ services:
       service_name: "enrollment-service"
 
   certificate-service:
+    image: mohamedelssawy/certificate-service:1.0
     build:
       context: .
       dockerfile: certificateService/lms/Dockerfile
@@ -95,6 +101,7 @@ services:
       service_name: "certificate-service"
 
   api-gateway:
+    image: mohamedelssawy/api-gateway:1.0
     build:
       context: .
       dockerfile: apiGateWay/lms/Dockerfile
@@ -130,6 +137,7 @@ services:
     command: -config.file=/etc/loki/loki-config.yaml
     ports:
       - "3100:3100"
+
   promtail:
     image: grafana/promtail
     container_name: promtail
