@@ -18,13 +18,11 @@ import com.lms.common.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -44,8 +42,8 @@ public class SecurityConfig {
 
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.CorsConfiguration configuration =
-                new org.springframework.web.cors.CorsConfiguration();
+        org.springframework.web.cors.CorsConfiguration configuration
+                = new org.springframework.web.cors.CorsConfiguration();
 
         configuration.setAllowedOrigins(
                 java.util.List.of("http://localhost:3000", "http://localhost:9000")
@@ -61,33 +59,34 @@ public class SecurityConfig {
 
         configuration.setAllowCredentials(true);
 
-        org.springframework.web.cors.UrlBasedCorsConfigurationSource source =
-                new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        org.springframework.web.cors.UrlBasedCorsConfigurationSource source
+                = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement(session
+                        -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/actuator/**").permitAll() // ← ADD THIS
+                .requestMatchers("/api/internal/**").permitAll() // ← also needed for inter-service calls
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 )
                 .addFilterBefore(
                         jwtAuthenticationFilter,
@@ -96,6 +95,5 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
 }

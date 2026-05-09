@@ -3,7 +3,7 @@ auth_enabled: false
 server:
   http_listen_port: 3100
 
- ingester:
+ingester:
   wal:
     enabled: true
     dir: /loki/wal

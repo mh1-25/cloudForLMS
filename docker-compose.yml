@@ -18,6 +18,11 @@ services:
     container_name: auth-service
     ports:
       - "8080:8080"
+    environment:
+      ADMIN_EMAIL: admin@lms.com
+      ADMIN_PASSWORD: Admin@1234
+      ADMIN_FIRST_NAME: System
+      ADMIN_LAST_NAME: Admin
     depends_on:
       - mysql
     labels:
@@ -125,8 +130,6 @@ services:
     command: -config.file=/etc/loki/loki-config.yaml
     ports:
       - "3100:3100"
-    restart: always
-
   promtail:
     image: grafana/promtail
     container_name: promtail
