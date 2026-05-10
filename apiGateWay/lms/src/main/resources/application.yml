@@ -7,6 +7,8 @@ spring:
           '[/**]':
             allowedOrigins:
               - "http://localhost:3000"
+              - "http://localhost:5173"
+              - "https://staging.d3i4ii5t3s88wv.amplifyapp.com"
             allowedMethods:
               - GET
               - POST
