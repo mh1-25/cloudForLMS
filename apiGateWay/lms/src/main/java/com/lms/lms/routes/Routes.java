@@ -5,17 +5,11 @@ import org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctio
 import org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.function.RequestPredicates;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
 @Configuration
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "https://staging.d3i4ii5t3s88wv.amplifyapp.com",
-        "https://lms-team-capital-university.d3i4ii5t3s88wv.amplifyapp.com"
-})
 public class Routes {
 
     @Bean

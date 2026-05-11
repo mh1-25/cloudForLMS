@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.lms.common.security.JwtAuthenticationFilter;
 
@@ -23,11 +22,6 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
-@CrossOrigin(origins = {
-        "http://localhost:3000",
-        "https://staging.d3i4ii5t3s88wv.amplifyapp.com",
-        "https://lms-team-capital-university.d3i4ii5t3s88wv.amplifyapp.com"
-})
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -46,38 +40,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.CorsConfiguration configuration
-                = new org.springframework.web.cors.CorsConfiguration();
-
-                configuration.setAllowedOrigins(
-                        java.util.List.of(
-                            "http://localhost:3000",
-                            "http://localhost:5173",
-                            "http://localhost:9000",
-                            "https://staging.d3i4ii5t3s88wv.amplifyapp.com",
-                            "https://lms-team-capital-university.d3i4ii5t3s88wv.amplifyapp.com"
-                        )
-                    );
-
-        configuration.setAllowedMethods(
-                java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        );
-
-        configuration.setAllowedHeaders(
-                java.util.List.of("*")
-        );
-
-        configuration.setAllowCredentials(true);
-
-        org.springframework.web.cors.UrlBasedCorsConfigurationSource source
-                = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -87,8 +49,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> {
-                })
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session
                         -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
