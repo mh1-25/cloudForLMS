@@ -1,0 +1,92 @@
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/app/logs/auth-service.log",
+            "log_group_name": "/lms/auth-service",
+            "log_stream_name": "{instance_id}-auth-service"
+          },
+          {
+            "file_path": "/app/logs/auth-service-errors.log",
+            "log_group_name": "/lms/auth-service/errors",
+            "log_stream_name": "{instance_id}-auth-service-errors"
+          },
+          {
+            "file_path": "/app/logs/user-service.log",
+            "log_group_name": "/lms/user-service",
+            "log_stream_name": "{instance_id}-user-service"
+          },
+          {
+            "file_path": "/app/logs/user-service-errors.log",
+            "log_group_name": "/lms/user-service/errors",
+            "log_stream_name": "{instance_id}-user-service-errors"
+          },
+          {
+            "file_path": "/app/logs/course-service.log",
+            "log_group_name": "/lms/course-service",
+            "log_stream_name": "{instance_id}-course-service"
+          },
+          {
+            "file_path": "/app/logs/course-service-errors.log",
+            "log_group_name": "/lms/course-service/errors",
+            "log_stream_name": "{instance_id}-course-service-errors"
+          },
+          {
+            "file_path": "/app/logs/assessment-service.log",
+            "log_group_name": "/lms/assessment-service",
+            "log_stream_name": "{instance_id}-assessment-service"
+          },
+          {
+            "file_path": "/app/logs/assessment-service-errors.log",
+            "log_group_name": "/lms/assessment-service/errors",
+            "log_stream_name": "{instance_id}-assessment-service-errors"
+          },
+          {
+            "file_path": "/app/logs/enrollment-service.log",
+            "log_group_name": "/lms/enrollment-service",
+            "log_stream_name": "{instance_id}-enrollment-service"
+          },
+          {
+            "file_path": "/app/logs/enrollment-service-errors.log",
+            "log_group_name": "/lms/enrollment-service/errors",
+            "log_stream_name": "{instance_id}-enrollment-service-errors"
+          },
+          {
+            "file_path": "/app/logs/certificate-service.log",
+            "log_group_name": "/lms/certificate-service",
+            "log_stream_name": "{instance_id}-certificate-service"
+          },
+          {
+            "file_path": "/app/logs/certificate-service-errors.log",
+            "log_group_name": "/lms/certificate-service/errors",
+            "log_stream_name": "{instance_id}-certificate-service-errors"
+          },
+          {
+            "file_path": "/app/logs/api-gateway.log",
+            "log_group_name": "/lms/api-gateway",
+            "log_stream_name": "{instance_id}-api-gateway"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "namespace": "LMS/EC2",
+    "metrics_collected": {
+      "cpu": {
+        "measurement": ["cpu_usage_idle", "cpu_usage_user"],
+        "metrics_collection_interval": 60
+      },
+      "mem": {
+        "measurement": ["mem_used_percent"],
+        "metrics_collection_interval": 60
+      },
+      "disk": {
+        "measurement": ["disk_used_percent"],
+        "metrics_collection_interval": 300
+      }
+    }
+  }
+}
